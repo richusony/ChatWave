@@ -1,0 +1,19 @@
+{
+  "name": "chatwave",
+  "version": "1.0.0",
+  "description": "ChatWave: Connect instantly, converse seamlessly. Engage in lively, real-time conversations. Effortless communication for socializing, collaborating, and connecting.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richusony/ChatWave.git"
+  },
+  "author": "Richu Sony",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/richusony/ChatWave/issues"
+  },
+  "homepage": "https://github.com/richusony/ChatWave#readme"
+}
