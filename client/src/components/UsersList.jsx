@@ -7,7 +7,7 @@ import jaggu from "../assets/users/jaggu.jpg";
 
 const UsersList = () => {
   return (
-    <div className="min-h-screen bg-[#FFFFFF] py-2 w-full md:w-1/3">
+    <div className="w-full md:w-1/3 min-h-screen bg-[#FFFFFF] py-2">
 
       <div className="mb-2 px-2 py-2">
         <div className="px-2 flex justify-between">
