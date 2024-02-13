@@ -7,7 +7,11 @@ const InitialPage = () => {
       <div className="flex justify-center items-center w-full ">
         <h1 className="mb-4 text-4xl font-bold text-gray-600">ChatWave</h1>
         <div className="w-24">
-          <img className="w-full h-full object-cover hue-rotate-60" src={wave} alt="wave" />
+          <img
+            className="w-full h-full object-cover hue-rotate-60"
+            src={wave}
+            alt="wave"
+          />
         </div>
       </div>
 
@@ -19,7 +23,11 @@ const InitialPage = () => {
         discussions."
       </p>
 
-        <div className="mt-5 text-center"><button className="bg-[#9c9cff] hover:bg-[#7474ff] py-2 px-4 rounded-full text-white shadow-md">Learn more</button></div>
+      <div className="mt-5 text-center">
+        <button className="bg-[#9c9cff] hover:bg-[#7474ff] py-2 px-4 rounded-full text-white shadow-md">
+          Learn more
+        </button>
+      </div>
     </div>
   );
 };
