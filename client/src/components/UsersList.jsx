@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -6,11 +6,28 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { sampleData} from "./constants";
+import { sampleData } from "./constants";
 import useScreen from "../Hooks/useScreen";
 
 const UsersList = () => {
-const screenWidth = useScreen();
+  const screenWidth = useScreen();
+  const [userData, setUserData] = useState(sampleData);
+  const [searchUser, setSearchUser] = useState("");
+  const [filteredUser, setFilteredUser] = useState(sampleData.receviedChats);
+
+  const handleSearchUsers = () => {
+  const searchTerm = searchUser.trim().toLowerCase(); // Trim and convert search input to lowercase
+  if (searchTerm !== "") {
+    const newData = userData.receviedChats.filter((user) =>
+      user.username.toLowerCase().includes(searchTerm)
+    );
+    setFilteredUser(newData);
+  } else {
+    setFilteredUser(userData.receviedChats); // Reset to original data when search input is empty
+  }
+};
+
+
   return (
     <div className="w-full md:w-1/3 h-screen bg-[#FFFFFF]  py-2 px-2 overflow-hidden">
       <div className="mb-2 px-2 py-2">
@@ -33,15 +50,26 @@ const screenWidth = useScreen();
             className="px-2 py-1 outline-none w-full"
             placeholder="Search"
             type="text"
+            onChange={(e) => setSearchUser(e.target.value)}
           />
-          <FontAwesomeIcon className="text-gray-500" icon={faSearch} />
+          <FontAwesomeIcon
+            onClick={handleSearchUsers}
+            className="transition delay-150 ease-linear text-gray-500 cursor-pointer hover:text-black"
+            icon={faSearch}
+          />
         </div>
       </div>
 
       <div className="h-5/6 overflow-auto">
-        {sampleData &&
-          sampleData.receviedChats.map((user, index) => (
-            <Link key={user.userId} to={screenWidth<767?`/mobile/chats/${user.userId}`:`/chats/${user.userId}`}>
+        { filteredUser.map((user, index) => (
+            <Link
+              key={user.userId}
+              to={
+                screenWidth < 767
+                  ? `/mobile/chats/${user.userId}`
+                  : `/chats/${user.userId}`
+              }
+            >
               <div className="my-1 border-gray-500 bg-[#FBFBFB] px-2 py-2 flex justify-between items-center rounded">
                 <div className="flex items-center justify-center">
                   <div className="mr-2 w-14">
