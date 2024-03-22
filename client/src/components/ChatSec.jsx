@@ -19,9 +19,9 @@ const ChatSec = () => {
   const isOnline = useOnline();
   return (
     <>
-      <div className="w-full h-screen relative overflow-hidden bg-[#E8E8F9]">
+      <div className="w-full h-screen relative overflow-hidden bg-[#E8E8F9] dark:bg-[#424769]">
         {/* Header  */}
-        <div className="py-2 px-4 bg-white shadow-sm md:shadow-none sticky right-0">
+        <div className="py-2 px-4 bg-white dark:bg-[#2D3250] shadow-sm md:shadow-none sticky right-0">
           <div className="flex justify-between items-center">
             <div className="flex justify-center items-center">
               <div className="w-11">
@@ -34,20 +34,20 @@ const ChatSec = () => {
                 />
               </div>
               <div className="ml-2">
-                <span className="font-semibold">
+                <span className="font-semibold dark:text-gray-300">
                   {sampleData.receviedChats[userId - 1].username}
                 </span>
               </div>
             </div>
 
             <div className="w-28 flex justify-between items-center text-lg text-gray-700">
-              <span className="cursor-pointer hover:text-[#6c44fa]">
+              <span className="cursor-pointer dark:text-[#6c44fa] dark:hover:text-gray-800 hover:text-[#6c44fa]">
                 <FontAwesomeIcon icon={faVideo} />
               </span>
-              <span className="cursor-pointer hover:text-[#6c44fa]">
+              <span className="cursor-pointer dark:text-[#6c44fa] dark:hover:text-gray-800 hover:text-[#6c44fa]">
                 <FontAwesomeIcon icon={faPhone} />
               </span>
-              <span className="cursor-pointer hover:text-[#6c44fa]">
+              <span className="cursor-pointer dark:text-[#6c44fa] dark:hover:text-gray-800 hover:text-[#6c44fa]">
                 <FontAwesomeIcon icon={faEllipsisV} />
               </span>
             </div>
@@ -75,9 +75,9 @@ const ChatSec = () => {
             ) : (
               <div key={msg.msgId} className="my-2 w-full flex justify-start">
                 <div className="py-1 px-2 max-w-40 md:w-fit bg-[#7351F2] rounded-xl shadow-md">
-                  <p className="text-white">{msg.message}</p>
+                  <p className="text-white dark:text-gray-800">{msg.message}</p>
                   <div className="text-end text-sm">
-                    <p className="text-gray-200">{msg.time}</p>
+                    <p className="text-gray-200 dark:text-gray-700">{msg.time}</p>
                   </div>
                 </div>
               </div>
@@ -92,11 +92,11 @@ const ChatSec = () => {
         {isOnline ? (
           <div className="px-2 sticky py-2 w-full flex items-center justify-between cursor-text">
             <input
-              className="outline-none bg-white w-screen py-3 px-3 rounded-full"
+              className="outline-none bg-white dark:bg-[#2D3250] dark:text-gray-300 w-screen py-3 px-3 rounded-full"
               type="text"
               placeholder="type something..."
             />
-            <span className="ml-2 py-3 px-4 text-white bg-[#7351F2] cursor-pointer rounded-full">
+            <span className="ml-2 py-3 px-4 text-white dark:text-gray-800 bg-[#7351F2] cursor-pointer rounded-full">
               <FontAwesomeIcon icon={faPaperPlane} />
             </span>
           </div>

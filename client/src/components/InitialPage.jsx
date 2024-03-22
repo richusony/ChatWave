@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import wave from "../assets/others/wave.png";
+import useTheme from "../context/theme";
 
 const InitialPage = () => {
+
   return (
     <div className="px-2 min-h-screen flex flex-col justify-center items-center">
       <div className="flex justify-center items-center w-full ">
         <h1 className="mb-4 text-4xl font-bold text-gray-600">
-          Chat
+          Chat 
           <span className="transition delay-150 ease-linear hover:text-violet-500">
             W
           </span>

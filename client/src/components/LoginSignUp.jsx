@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import loginBg from "../assets/others/login-bg.jpg";
 import wave from "../assets/others/wave.png";
+import UserContext from "../context/UserContexs";
 
 const LoginSignUp = () => {
+const {user} = useContext(UserContext)
   return (
     <div>
       <div className="flex flex-col md:flex-row">
