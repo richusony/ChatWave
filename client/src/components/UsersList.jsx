@@ -15,6 +15,10 @@ const UsersList = () => {
   const [searchUser, setSearchUser] = useState("");
   const [filteredUser, setFilteredUser] = useState(sampleData.receviedChats);
 
+  useEffect(()=>{
+  handleSearchUsers()
+  },[searchUser])
+
   const handleSearchUsers = () => {
   const searchTerm = searchUser.trim().toLowerCase(); // Trim and convert search input to lowercase
   if (searchTerm !== "") {
