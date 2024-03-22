@@ -5,7 +5,7 @@ import Chats from './components/Chats'
 const App = () => {
   return (
     <>
-      <LoginSignUp />
+      {/* <LoginSignUp /> */}
       {/* <Chats /> */}
     </>
   )
