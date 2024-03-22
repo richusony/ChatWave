@@ -6,9 +6,11 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { sampleData, userData } from "./constants";
+import { sampleData} from "./constants";
+import useScreen from "../Hooks/useScreen";
 
 const UsersList = () => {
+const screenWidth = useScreen();
   return (
     <div className="w-full md:w-1/3 h-screen bg-[#FFFFFF]  py-2 px-2 overflow-hidden">
       <div className="mb-2 px-2 py-2">
@@ -39,7 +41,7 @@ const UsersList = () => {
       <div className="h-5/6 overflow-auto">
         {sampleData &&
           sampleData.receviedChats.map((user, index) => (
-            <Link key={user.userId} to={`/chats/${user.userId}`}>
+            <Link key={user.userId} to={screenWidth<767?`/mobile/chats/${user.userId}`:`/chats/${user.userId}`}>
               <div className="my-1 border-gray-500 bg-[#FBFBFB] px-2 py-2 flex justify-between items-center rounded">
                 <div className="flex items-center justify-center">
                   <div className="mr-2 w-14">

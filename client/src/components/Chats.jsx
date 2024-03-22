@@ -3,9 +3,11 @@ import UsersList from "./UsersList";
 import ChatSec from "./ChatSec";
 import InitialPage from "./InitialPage";
 import { useParams } from "react-router-dom";
+import useScreen from "../Hooks/useScreen";
 
 const Chats = () => {
   const { userId } = useParams();
+  const screenWidth = useScreen();
   return (
     <div className="w-full h-full flex overflow-hidden">
         <UsersList />
