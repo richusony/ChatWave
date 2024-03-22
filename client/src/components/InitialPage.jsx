@@ -5,8 +5,22 @@ const InitialPage = () => {
   return (
     <div className="px-2 min-h-screen flex flex-col justify-center items-center">
       <div className="flex justify-center items-center w-full ">
-        <h1 className="mb-4 text-4xl font-bold text-gray-600">ChatWave</h1>
-        <div className="w-24">
+        <h1 className="mb-4 text-4xl font-bold text-gray-600">
+          Chat
+          <span className="transition delay-150 ease-linear hover:text-violet-500">
+            W
+          </span>
+          <span className="transition delay-150 ease-linear hover:text-violet-500">
+            a
+          </span>
+          <span className="transition delay-150 ease-linear hover:text-violet-500">
+            v
+          </span>
+          <span className="transition delay-150 ease-linear hover:text-violet-500">
+            e
+          </span>
+        </h1>
+        <div className="ml-1 w-24">
           <img
             className="w-full h-full object-cover hue-rotate-60"
             src={wave}

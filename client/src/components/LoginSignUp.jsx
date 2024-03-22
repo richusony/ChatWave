@@ -15,7 +15,13 @@ const LoginSignUp = () => {
           <div className="absolute top-0 right-0 w-full h-full bg-violet-500 opacity-50"></div>
           <div className="absolute top-0 right-0 w-full h-full flex flex-col justify-center items-center">
             <div className="flex justify-center items-center w-full ">
-              <h1 className="mb-4 text-4xl font-bold text-white">ChatWave</h1>
+              <h1 className="mb-4 text-4xl font-bold text-white">
+              Chat
+              <span className="transition delay-150 ease-linear hover:text-violet-500">W</span>
+              <span className="transition delay-150 ease-linear hover:text-violet-500">a</span>
+              <span className="transition delay-150 ease-linear hover:text-violet-500">v</span>
+              <span className="transition delay-150 ease-linear hover:text-violet-500">e</span>
+            </h1>
               <div className="w-24">
                 <img
                   className="w-full h-full object-cover hue-rotate-60"

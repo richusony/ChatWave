@@ -41,13 +41,13 @@ const ChatSec = () => {
             </div>
 
             <div className="w-28 flex justify-between items-center text-lg text-gray-700">
-              <span className="cursor-pointer hover:text-black">
+              <span className="cursor-pointer hover:text-[#6c44fa]">
                 <FontAwesomeIcon icon={faVideo} />
               </span>
-              <span className="cursor-pointer hover:text-black">
+              <span className="cursor-pointer hover:text-[#6c44fa]">
                 <FontAwesomeIcon icon={faPhone} />
               </span>
-              <span className="cursor-pointer hover:text-black">
+              <span className="cursor-pointer hover:text-[#6c44fa]">
                 <FontAwesomeIcon icon={faEllipsisV} />
               </span>
             </div>
