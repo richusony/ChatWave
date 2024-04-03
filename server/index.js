@@ -1,10 +1,13 @@
-require("dotenv").config();
-const express = require("express");
+import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
+import cors from "cors"
+import userRouter from "./routes/user.js"
+import { connectMongo } from "./connection.js";
+
 const app = express();
 const PORT = process.env.PORT || 8080;
-const userRouter = require("./routes/user");
-const { connectMongo } = require("./connection");
-
+app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -15,6 +18,8 @@ connectMongo(`${process.env.MONGODB_URI}`).then(() => {
 
 // User Routes
 app.use("/", userRouter);
+
+// app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on Port: ${PORT}`);

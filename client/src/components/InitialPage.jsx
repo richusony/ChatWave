@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import wave from "../assets/others/wave.png";
+import wave from "../assets/others/ailogo-removebg-preview.png";
 import useTheme from "../context/theme";
 
 const InitialPage = () => {
 
   return (
     <div className="px-2 min-h-screen flex flex-col justify-center items-center">
-      <div className="flex justify-center items-center w-full ">
+      <div className="flex justify-center items-center w-full">
         <h1 className="mb-4 text-4xl font-bold text-gray-600">
           Chat 
           <span className="transition delay-150 ease-linear hover:text-violet-500">
@@ -22,7 +22,7 @@ const InitialPage = () => {
             e
           </span>
         </h1>
-        <div className="ml-1 w-24">
+        <div className="w-20 h-14">
           <img
             className="w-full h-full object-cover hue-rotate-60"
             src={wave}
