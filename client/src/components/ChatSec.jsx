@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import delbin from "../assets/users/delbin.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,10 +13,49 @@ import {
 import { useParams } from "react-router-dom";
 import { sampleData } from "./constants.js";
 import useOnline from "../Hooks/useOnline.js";
+import axios from "axios";
+import SelectedChat from "../context/SelectedChat.jsx";
 
 const ChatSec = () => {
   const { userId } = useParams();
+  const { selectedId } = useContext(SelectedChat);
   const isOnline = useOnline();
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [user, setUser] = useState({});
+
+  const handleUserChats = async () => {
+    const res = await fetch(`/api/messages/${selectedId}`);
+    const data = await res.json();
+    setMessages(data);
+  };
+
+  const getUserDetails = async () => {
+    const reqData = await fetch(`/api/users/${selectedId}`);
+    const resData = await reqData.json();
+    setUser(resData);
+    console.log("messages : ", resData);
+  };
+  useEffect(() => {
+    getUserDetails();
+    handleUserChats();
+  }, [selectedId]);
+
+  const handleSendMessage = async () => {
+    const reqData = {
+      message: input,
+    };
+    const res = await fetch(`/api/messages/send/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqData),
+    });
+    const resData = await res.json();
+    setInput("");
+    console.log("send :", resData);
+  };
   return (
     <>
       <div className="w-full h-screen relative overflow-hidden bg-[#E8E8F9] dark:bg-[#424769]">
@@ -27,15 +66,13 @@ const ChatSec = () => {
               <div className="w-11">
                 <img
                   className="w-full h-full object-cover rounded-full"
-                  src={`https://randomuser.me/api/portraits/men/${
-                    userId ? userId : 1
-                  }.jpg`}
+                  src={user.profileImage}
                   alt="user"
                 />
               </div>
               <div className="ml-2">
                 <span className="font-semibold dark:text-gray-300">
-                  {sampleData.receviedChats[userId - 1].username}
+                  {user.fullname}
                 </span>
               </div>
             </div>
@@ -62,22 +99,24 @@ const ChatSec = () => {
             </span>
           </div>
 
-          {sampleData.receviedChats[userId - 1].messages.map((msg) =>
-            msg.userId == userId ? (
-              <div key={msg.msgId} className="my-2 w-full flex justify-end">
+          {messages.map((msg) =>
+            msg.receiverId == selectedId ? (
+              <div key={msg._id} className="my-2 w-full flex justify-end">
                 <div className="py-1 px-2 max-w-40 md:w-fit bg-[#FFFFFF]  rounded-xl shadow-md">
                   <p className="text-gray-700">{msg.message}</p>
                   <div className="text-end text-sm">
-                    <p className="text-slate-500">{msg.time}</p>
+                    <p className="text-slate-500">{msg.createdAt}</p>
                   </div>
                 </div>
               </div>
             ) : (
-              <div key={msg.msgId} className="my-2 w-full flex justify-start">
+              <div key={msg._id} className="my-2 w-full flex justify-start">
                 <div className="py-1 px-2 max-w-40 md:w-fit bg-[#7351F2] rounded-xl shadow-md">
                   <p className="text-white dark:text-gray-800">{msg.message}</p>
                   <div className="text-end text-sm">
-                    <p className="text-gray-200 dark:text-gray-700">{msg.time}</p>
+                    <p className="text-gray-200 dark:text-gray-700">
+                      {msg.createdAt}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -94,9 +133,14 @@ const ChatSec = () => {
             <input
               className="outline-none bg-white dark:bg-[#2D3250] dark:text-gray-300 w-screen py-3 px-3 rounded-full"
               type="text"
+              value={input}
               placeholder="type something..."
+              onChange={(e) => setInput(e.target.value)}
             />
-            <span className="ml-2 py-3 px-4 text-white dark:text-gray-800 bg-[#7351F2] cursor-pointer rounded-full">
+            <span
+              onClick={handleSendMessage}
+              className="ml-2 py-3 px-4 text-white dark:text-gray-800 bg-[#7351F2] cursor-pointer rounded-full"
+            >
               <FontAwesomeIcon icon={faPaperPlane} />
             </span>
           </div>

@@ -1,12 +1,27 @@
 import axios from "axios";
 
 export async function loginSignUp(email, fullname, profile_img) {
-    console.log("reached",email, fullname, profile_img)
-  const res = await axios.post("http://localhost:8080/api/auth/login-signup", {
+  console.log("reached", email, fullname, profile_img);
+  const reqData = {
     email,
     fullname,
     profile_img,
-  });
-  console.log("response from backend  ",res);
+  };
+// await axios.post("/api/auth/login-signup", {});
+  const res = await fetch("/api/auth/login-signup", {
+    method: 'POST',
+    headers: {
+      "Content-Type" : "application/json",
+    },
+    body: await JSON.stringify(reqData)
+  })
+  const resData = await res.json()
+  // console.log("response from backend  ", resData);
+}
 
+export async function getUsers() {
+  // console.log("reached");
+  const res = await axios.get("/api/users/");
+  return res.data;
+  // console.log("all users from backend  ", res);
 }

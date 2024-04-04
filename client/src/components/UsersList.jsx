@@ -11,15 +11,29 @@ import { Link } from "react-router-dom";
 import { sampleData } from "./constants";
 import useScreen from "../Hooks/useScreen";
 import useTheme, { ThemeProvdier } from "../context/theme";
+import { getUsers } from "../utils/helper";
+import axios from "axios";
+import SelectedChat from "../context/SelectedChat.jsx";
 
 const UsersList = () => {
   const screenWidth = useScreen();
+  const { setSelectedId } = useContext(SelectedChat);
   // const { user, setUser } = useContext(UserContext);
-  const [userData, setUserData] = useState(sampleData);
+  const [userData, setUserData] = useState([]);
   const [searchUser, setSearchUser] = useState("");
-  const [filteredUser, setFilteredUser] = useState(sampleData.receviedChats);
+  const [filteredUser, setFilteredUser] = useState();
   const [themeMode, setThemeMode] = useState("light");
   // const {darkTheme,lightTheme,ThemeMode} = useTheme();
+
+  useEffect(() => {
+    async function getUsers() {
+      const res = await axios.get("/api/users/");
+      const data = res.data;
+      setUserData(data);
+    }
+    getUsers();
+    console.log(userData);
+  }, []);
 
   useEffect(() => {
     handleSearchUsers();
@@ -33,12 +47,12 @@ const UsersList = () => {
   const handleSearchUsers = () => {
     const searchTerm = searchUser.trim().toLowerCase(); // Trim and convert search input to lowercase
     if (searchTerm !== "") {
-      const newData = userData.receviedChats.filter((user) =>
+      const newData = userData.filter((user) =>
         user.username.toLowerCase().includes(searchTerm)
       );
       setFilteredUser(newData);
     } else {
-      setFilteredUser(userData.receviedChats); // Reset to original data when search input is empty
+      setFilteredUser(userData); // Reset to original data when search input is empty
     }
   };
 
@@ -103,13 +117,14 @@ const UsersList = () => {
         </div>
 
         <div className="h-5/6 overflow-auto">
-          {filteredUser.map((user, index) => (
+          {userData.map((user, index) => (
             <Link
-              key={user.userId}
+              onClick={() => setSelectedId(user._id)}
+              key={user._id}
               to={
                 screenWidth < 767
-                  ? `/mobile/chats/${user.userId}`
-                  : `/chats/${user.userId}`
+                  ? `/mobile/chats/${user.username}`
+                  : `/chats/${user.username}`
               }
             >
               <div className="my-1 border-gray-500 bg-[#FBFBFB] dark:bg-[#7077A1] px-2 py-2 flex justify-between items-center rounded">
@@ -117,29 +132,30 @@ const UsersList = () => {
                   <div className="mr-2 w-14">
                     <img
                       className="w-full h-full rounded-full object-cover"
-                      src={user.avatar}
+                      src={user.profileImage}
                       alt="user"
                     />
                   </div>
 
                   <div>
                     <h3 className="font-semibold  dark:text-gray-900">
-                      {user.username}
+                      {user.fullname}
                     </h3>
                     <span className="text-gray-800 text-sm">
-                      {user.messages[user.messages.length - 1].message.length >
+                      {/* {user.messages[user.messages.length - 1].message.length >
                       30
                         ? user.messages[
                             user.messages.length - 1
                           ].message.substring(0, 25) + "..."
-                        : user.messages[user.messages.length - 1].message}
+                        : user.messages[user.messages.length - 1].message} */}
+                      @{user.username}
                     </span>
                   </div>
                 </div>
 
                 <div>
                   <span className="text-gray-500 dark:text-gray-800 text-sm">
-                    {user.messages[user.messages.length - 1].time}
+                    {/* {user.messages[user.messages.length - 1].time} */}2:30pm
                   </span>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { userModel } from "../../models/userSchema.js";
+import userModel from "../../models/user.model.js";
 import generateTokenAndSetCookie from "../../utils/generateToken.js";
 
 export const loginSignUp = async (req, res) => {
