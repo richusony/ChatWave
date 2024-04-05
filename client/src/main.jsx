@@ -6,40 +6,42 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Chats from "./components/Chats.jsx";
 import LoginSignUp from "./components/LoginSignUp.jsx";
 import ChatSec from "./components/ChatSec.jsx";
+import LoggedInUserCnxtProvider from "./context/LoggedInUserCnxtProvider.jsx";
+import { SocketContextProvider } from "./context/SocketContext.jsx";
 // import UserContextProvider from "./context/UserContextProvider.jsx";
 // import { ThemeProvdier } from "./context/theme.js";
 
 const chatRoute = createBrowserRouter([
   {
     path: "/",
-    element: <LoginSignUp />,
+    element:<LoggedInUserCnxtProvider><LoginSignUp /></LoggedInUserCnxtProvider> ,
   },
   {
     path: "/chats",
-    element: <Chats />,
+    element: <LoggedInUserCnxtProvider><Chats /></LoggedInUserCnxtProvider>,
     children: [
       {
         path: ":userId", // Use ":userId" for dynamic user IDs
-        element: <Chats />,
+        element: <LoggedInUserCnxtProvider><Chats /></LoggedInUserCnxtProvider>,
       },
     ],
   },
   {
     path: "/mobile/chats/:userId",
-    element: <ChatSec />,
+    element: <LoggedInUserCnxtProvider><ChatSec /></LoggedInUserCnxtProvider>,
   },
   {
     path: "/login",
-    element: <LoginSignUp />,
+    element: <LoggedInUserCnxtProvider><LoginSignUp /></LoggedInUserCnxtProvider>,
   },
   {
     path: "/signup",
-    element: <LoginSignUp />,
+    element: <LoggedInUserCnxtProvider><LoginSignUp /></LoggedInUserCnxtProvider>,
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-      <RouterProvider router={chatRoute} />
+        <RouterProvider router={chatRoute} />
   </React.StrictMode>
 );

@@ -1,28 +1,31 @@
 import React, { useContext, useState } from "react";
 import loginBg from "../assets/others/login-bg.jpg";
 import wave from "../assets/others/wave.png";
-import UserContext from "../context/UserContexs";
+import UserContext from "../context/LoggedInUserContexs";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../services/firebase";
 import { loginSignUp } from "../utils/helper";
+import { Navigate } from "react-router-dom";
+import LoggedInUserContext from "../context/LoggedInUserContexs";
+import { useLoggedInUser } from "../context/LoggedInUserCnxtProvider";
 
 const LoginSignUp = () => {
-  // const {user} = useContext(UserContext);
-  const [user, setUser] = useState();
+  const {user,setUser} = useLoggedInUser();
+  // const [user, setUser] = useState();
   const googleLogin = async (e) => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const userData = result.user;
-      loginSignUp(userData.email, userData.displayName, userData.photoURL);
+      loginSignUp(userData.email, userData.displayName, userData.photoURL, setUser);
       // Now you can access user details such as email, name, and profile picture
-      setUser({
-        email: userData.email,
-        name: userData.displayName,
-        profileUrl: userData.photoURL
-          ? userData.photoURL
-          : "https://robohash.org/123",
-      });
-
+  
+      // setUser({
+      //   email: userData.email,
+      //   name: userData.displayName,
+      //   profileUrl: userData.photoURL
+      //     ? userData.photoURL
+      //     : "https://robohash.org/123",
+      // });
       // You can then use these details as needed, such as storing them in state or passing them to other components
       // console.log('User Email:', userEmail);
       // console.log('User Name:', userName);
@@ -33,6 +36,7 @@ const LoginSignUp = () => {
   };
   return (
     <div>
+      {user && <Navigate to="/chats" />}
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-1/2 h-screen relative">
           <img

@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   faBars,
   faMoon,
@@ -7,32 +9,30 @@ import {
   faSun,
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import { sampleData } from "./constants";
 import useScreen from "../Hooks/useScreen";
-import useTheme, { ThemeProvdier } from "../context/theme";
-import { getUsers } from "../utils/helper";
-import axios from "axios";
+import { ThemeProvdier } from "../context/theme";
 import SelectedChat from "../context/SelectedChat.jsx";
 
 const UsersList = () => {
   const screenWidth = useScreen();
   const { setSelectedId } = useContext(SelectedChat);
-  // const { user, setUser } = useContext(UserContext);
   const [userData, setUserData] = useState([]);
   const [searchUser, setSearchUser] = useState("");
-  const [filteredUser, setFilteredUser] = useState();
+  const [filteredUser, setFilteredUser] = useState(userData);
   const [themeMode, setThemeMode] = useState("light");
-  // const {darkTheme,lightTheme,ThemeMode} = useTheme();
 
   useEffect(() => {
-    async function getUsers() {
+    try {
+      async function getUsers() {
       const res = await axios.get("/api/users/");
       const data = res.data;
       setUserData(data);
     }
     getUsers();
     console.log(userData);
+    } catch (error) {
+      console.log("error while fetching users ",error)
+    }
   }, []);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const UsersList = () => {
     const searchTerm = searchUser.trim().toLowerCase(); // Trim and convert search input to lowercase
     if (searchTerm !== "") {
       const newData = userData.filter((user) =>
-        user.username.toLowerCase().includes(searchTerm)
+        user.fullname.toLowerCase().includes(searchTerm)
       );
       setFilteredUser(newData);
     } else {
@@ -117,7 +117,7 @@ const UsersList = () => {
         </div>
 
         <div className="h-5/6 overflow-auto">
-          {userData.map((user, index) => (
+          {userData.map((user, index, array) => (
             <Link
               onClick={() => setSelectedId(user._id)}
               key={user._id}

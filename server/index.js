@@ -7,10 +7,11 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.router.js"
 import authRoutes from "./routes/auth.routes.js"
 import messageRoutes from "./routes/message.route.js"
+import { app, server } from "./socket/socket.js";
 
 import { connectMongo } from "./connection.js";
 
-const app = express();
+// const app = express();
 const PORT = process.env.PORT || 8080;
 app.use(cors())
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +30,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes)
 app.use("/api/users", userRouter);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on Port: ${PORT}`);
 });

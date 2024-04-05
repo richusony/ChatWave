@@ -1,34 +1,34 @@
-import React, { useContext, useEffect, useState } from "react";
-import delbin from "../assets/users/delbin.jpg";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faDotCircle,
   faEllipsisV,
-  faListDots,
   faPaperPlane,
   faPhone,
   faVideo,
   faWifi,
 } from "@fortawesome/free-solid-svg-icons";
-import { useParams } from "react-router-dom";
-import { sampleData } from "./constants.js";
 import useOnline from "../Hooks/useOnline.js";
-import axios from "axios";
 import SelectedChat from "../context/SelectedChat.jsx";
+import { extractTime } from "../utils/helper.js";
+import { useSocketContext } from "../context/SocketContext.jsx";
+import useRealTimeMsg from "../Hooks/useRealTimeMsg.js";
 
 const ChatSec = () => {
-  const { userId } = useParams();
   const { selectedId } = useContext(SelectedChat);
   const isOnline = useOnline();
+  const {onlineUsers} = useSocketContext()
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [user, setUser] = useState({});
-
+  const lastMessage = useRef();
+  console.log("online users ",onlineUsers)
   const handleUserChats = async () => {
     const res = await fetch(`/api/messages/${selectedId}`);
     const data = await res.json();
     setMessages(data);
   };
+
+   useRealTimeMsg(messages,setMessages)
 
   const getUserDetails = async () => {
     const reqData = await fetch(`/api/users/${selectedId}`);
@@ -41,19 +41,23 @@ const ChatSec = () => {
     handleUserChats();
   }, [selectedId]);
 
+useEffect(()=>{
+    lastMessage.current?.scrollIntoView({behaviour: "smooth"});
+},[messages])
   const handleSendMessage = async () => {
     const reqData = {
       message: input,
     };
-    const res = await fetch(`/api/messages/send/${userId}`, {
+    const res = await fetch(`/api/messages/send/${selectedId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(reqData),
     });
+    if(res.status == 201) setInput("");
     const resData = await res.json();
-    setInput("");
+    
     console.log("send :", resData);
   };
   return (
@@ -72,7 +76,7 @@ const ChatSec = () => {
               </div>
               <div className="ml-2">
                 <span className="font-semibold dark:text-gray-300">
-                  {user.fullname}
+                 <span> {user.fullname}</span> <span>{onlineUsers.includes(user._id)?"online": "offline"}</span>
                 </span>
               </div>
             </div>
@@ -92,7 +96,7 @@ const ChatSec = () => {
         </div>
 
         {/* Chats  */}
-        <div className="px-3 h-[81vh] overflow-auto">
+        <div className="px-3 h-[81vh] overflow-auto scroll-smooth">
           <div className="my-4 text-center">
             <span className="px-2 py-2 bg-white rounded-xl shadow-xl text-gray-700">
               January 10 2023
@@ -101,31 +105,27 @@ const ChatSec = () => {
 
           {messages.map((msg) =>
             msg.receiverId == selectedId ? (
-              <div key={msg._id} className="my-2 w-full flex justify-end">
+              <div key={msg._id} ref={lastMessage} className="my-2 w-full flex justify-end">
                 <div className="py-1 px-2 max-w-40 md:w-fit bg-[#FFFFFF]  rounded-xl shadow-md">
                   <p className="text-gray-700">{msg.message}</p>
-                  <div className="text-end text-sm">
-                    <p className="text-slate-500">{msg.createdAt}</p>
+                  <div className="text-end text-xs">
+                    <p className="text-slate-500">{extractTime(msg.createdAt)}</p>
                   </div>
                 </div>
               </div>
             ) : (
-              <div key={msg._id} className="my-2 w-full flex justify-start">
+              <div ref={lastMessage} key={msg._id} className="my-2 w-full flex justify-start">
                 <div className="py-1 px-2 max-w-40 md:w-fit bg-[#7351F2] rounded-xl shadow-md">
                   <p className="text-white dark:text-gray-800">{msg.message}</p>
-                  <div className="text-end text-sm">
+                  <div className="text-end text-xs">
                     <p className="text-gray-200 dark:text-gray-700">
-                      {msg.createdAt}
+                      {extractTime(msg.createdAt)}
                     </p>
                   </div>
                 </div>
               </div>
             )
           )}
-          {/* 
-          {userData[0].chats[0].msgToUser.map((msg, index) => (
-           
-          ))} */}
         </div>
 
         {isOnline ? (
