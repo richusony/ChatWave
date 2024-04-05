@@ -1,7 +1,7 @@
 import { createContext, useContext} from "react";
 
 export const ThemeContext = createContext({
-    themeMode: 'light',
+    themeMode: localStorage.getItem('theme') || 'light',
     darkTheme: () => {},
     lightTheme: () => {}
 })

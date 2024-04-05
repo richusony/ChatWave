@@ -4,6 +4,7 @@ import {
   faEllipsisV,
   faPaperPlane,
   faPhone,
+  faSpinner,
   faVideo,
   faWifi,
 } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +21,7 @@ const ChatSec = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [user, setUser] = useState({});
+  const [sendLoading, setSendLoading] = useState(false);
   const lastMessage = useRef();
   console.log("online users ",onlineUsers)
   const handleUserChats = async () => {
@@ -39,12 +41,13 @@ const ChatSec = () => {
   useEffect(() => {
     getUserDetails();
     handleUserChats();
-  }, [selectedId]);
+  }, [selectedId,sendLoading]);
 
 useEffect(()=>{
     lastMessage.current?.scrollIntoView({behaviour: "smooth"});
 },[messages])
   const handleSendMessage = async () => {
+    setSendLoading(true);
     const reqData = {
       message: input,
     };
@@ -57,14 +60,14 @@ useEffect(()=>{
     });
     if(res.status == 201) setInput("");
     const resData = await res.json();
-    
+    setSendLoading(false);
     console.log("send :", resData);
   };
   return (
     <>
       <div className="w-full h-screen relative overflow-hidden bg-[#E8E8F9] dark:bg-[#424769]">
         {/* Header  */}
-        <div className="py-2 px-4 bg-white dark:bg-[#2D3250] shadow-sm md:shadow-none sticky right-0">
+        <div className="py-2 px-4 bg-white dark:bg-[#2D3250] shadow-sm md:shadow-none right-0">
           <div className="flex justify-between items-center">
             <div className="flex justify-center items-center">
               <div className="w-11">
@@ -76,7 +79,7 @@ useEffect(()=>{
               </div>
               <div className="ml-2">
                 <span className="font-semibold dark:text-gray-300">
-                 <span> {user.fullname}</span> <span>{onlineUsers.includes(user._id)?"online": "offline"}</span>
+                 <p> {user.fullname}</p> <p className="text-xs text-gray-400">{onlineUsers.includes(user._id)?"Online": "Offline"}</p>
                 </span>
               </div>
             </div>
@@ -129,7 +132,7 @@ useEffect(()=>{
         </div>
 
         {isOnline ? (
-          <div className="px-2 sticky py-2 w-full flex items-center justify-between cursor-text">
+          <div className="px-2 py-2 w-full flex items-center justify-between cursor-text">
             <input
               className="outline-none bg-white dark:bg-[#2D3250] dark:text-gray-300 w-screen py-3 px-3 rounded-full"
               type="text"
@@ -141,8 +144,10 @@ useEffect(()=>{
               onClick={handleSendMessage}
               className="ml-2 py-3 px-4 text-white dark:text-gray-800 bg-[#7351F2] cursor-pointer rounded-full"
             >
-              <FontAwesomeIcon icon={faPaperPlane} />
+      {sendLoading ? <FontAwesomeIcon icon={faSpinner} />:
+              <FontAwesomeIcon icon={faPaperPlane} />}
             </span>
+
           </div>
         ) : (
           <div className="px-2 sticky py-2 w-full flex items-center justify-center cursor-text text-center">

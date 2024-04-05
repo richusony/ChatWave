@@ -8,6 +8,7 @@ import LoginSignUp from "./components/LoginSignUp.jsx";
 import ChatSec from "./components/ChatSec.jsx";
 import LoggedInUserCnxtProvider from "./context/LoggedInUserCnxtProvider.jsx";
 import { SocketContextProvider } from "./context/SocketContext.jsx";
+import FindUserPage from "./components/FindUserPage.jsx";
 // import UserContextProvider from "./context/UserContextProvider.jsx";
 // import { ThemeProvdier } from "./context/theme.js";
 
@@ -38,6 +39,10 @@ const chatRoute = createBrowserRouter([
     path: "/signup",
     element: <LoggedInUserCnxtProvider><LoginSignUp /></LoggedInUserCnxtProvider>,
   },
+  // {
+  //   path: "/find",
+  //   element: <LoggedInUserCnxtProvider><FindUserPage /></LoggedInUserCnxtProvider>,
+  // },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

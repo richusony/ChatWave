@@ -15,11 +15,11 @@ import SelectedChat from "../context/SelectedChat.jsx";
 
 const UsersList = () => {
   const screenWidth = useScreen();
-  const { setSelectedId } = useContext(SelectedChat);
+  const { setSelectedId, setOpenWindow } = useContext(SelectedChat);
   const [userData, setUserData] = useState([]);
   const [searchUser, setSearchUser] = useState("");
-  const [filteredUser, setFilteredUser] = useState(userData);
-  const [themeMode, setThemeMode] = useState("light");
+  const [filteredUser, setFilteredUser] = useState([]);
+  const [themeMode, setThemeMode] = useState(localStorage.getItem("theme"));
 
   useEffect(() => {
     try {
@@ -27,6 +27,7 @@ const UsersList = () => {
       const res = await axios.get("/api/users/");
       const data = res.data;
       setUserData(data);
+      setFilteredUser(data);
     }
     getUsers();
     console.log(userData);
@@ -58,9 +59,11 @@ const UsersList = () => {
 
   const darkTheme = () => {
     setThemeMode("dark");
+    localStorage.setItem("theme", "dark");
   };
   const lightTheme = () => {
     setThemeMode("light");
+    localStorage.setItem("theme", "light");
   };
 
   const handleTheme = () => {
@@ -91,7 +94,7 @@ const UsersList = () => {
                 />
               </h2>
               <h2 className="mx-1 text-xl">
-                <FontAwesomeIcon
+               <FontAwesomeIcon onClick={()=>setOpenWindow(true)}
                   className="text-gray-600 hover:text-[#6c44fa] dark:text-gray-800 dark:hover:text-[#6c44fa] cursor-pointer"
                   icon={faUserPlus}
                 />
@@ -117,7 +120,7 @@ const UsersList = () => {
         </div>
 
         <div className="h-5/6 overflow-auto">
-          {userData.map((user, index, array) => (
+          {filteredUser.map((user, index, array) => (
             <Link
               onClick={() => setSelectedId(user._id)}
               key={user._id}
