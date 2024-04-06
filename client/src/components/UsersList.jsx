@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   faBars,
+  faBell,
+  faClose,
   faMoon,
   faSearch,
   faSun,
@@ -12,10 +14,11 @@ import {
 import useScreen from "../Hooks/useScreen";
 import { ThemeProvdier } from "../context/theme";
 import SelectedChat from "../context/SelectedChat.jsx";
+import NotificationPage from "./NotificationPage.jsx";
 
 const UsersList = () => {
   const screenWidth = useScreen();
-  const { setSelectedId, setOpenWindow } = useContext(SelectedChat);
+  const { setSelectedId, setOpenWindow, notificationPage, setNotificationPage} = useContext(SelectedChat);
   const [userData, setUserData] = useState([]);
   const [searchUser, setSearchUser] = useState("");
   const [filteredUser, setFilteredUser] = useState([]);
@@ -86,15 +89,22 @@ const UsersList = () => {
               />
             </h2>
             <div className="flex justify-between">
-              <h2 className="mr-3 text-xl">
+              <h2 className="mr-7 text-xl">
                 <FontAwesomeIcon
                   onClick={handleTheme}
                   className="transition delay-150 ease-linear text-gray-600 hover:text-[#6c44fa] dark:text-gray-800 dark:hover:text-[#6c44fa] cursor-pointer"
                   icon={themeMode === "dark" ? faSun : faMoon}
                 />
               </h2>
-              <h2 className="mx-1 text-xl">
-               <FontAwesomeIcon onClick={()=>setOpenWindow(true)}
+              <h2 className="mr-7 text-xl">
+                <FontAwesomeIcon onClick={()=>{setNotificationPage((prev)=> !prev), setOpenWindow(false)}}
+                  className="transition delay-150 ease-linear text-gray-600 hover:text-[#6c44fa] dark:text-gray-800 dark:hover:text-[#6c44fa] cursor-pointer"
+                  icon={faBell}
+                />
+                {notificationPage && <NotificationPage/> }
+              </h2>
+              <h2 className="text-xl">
+               <FontAwesomeIcon onClick={()=>{setOpenWindow(true), setNotificationPage(false)}}
                   className="text-gray-600 hover:text-[#6c44fa] dark:text-gray-800 dark:hover:text-[#6c44fa] cursor-pointer"
                   icon={faUserPlus}
                 />

@@ -37,6 +37,7 @@ export const loginSignUp = async (req, res) => {
         fullname: userDetails.fullname,
         username: userDetails.username,
         profile_img: userDetails.profileImage,
+        friends: userDetails.friends
       });
     }
   } catch (error) {

@@ -1,11 +1,21 @@
 import express from "express";
 import protectRoute from "../middleware/protectRoute.js";
-import { getUserDetails, getUsers, getUsersForSidebar } from "../controllers/user/user.controller.js";
+import {
+    acceptFriendRequest,
+  followUserRequest,
+  getNotifications,
+  getUserDetails,
+  getUsers,
+  getUsersForSidebar,
+} from "../controllers/user/user.controller.js";
 
 const router = express.Router();
 
-router.get('/', protectRoute,getUsersForSidebar)
-router.get('/:id',protectRoute, getUserDetails)
-router.post('/search-user',protectRoute,getUsers)
+router.get("/", protectRoute, getUsersForSidebar);
+router.get("/:id", protectRoute, getUserDetails);
+router.post("/search-user", protectRoute, getUsers);
+router.get("/follow-request/:id", protectRoute, followUserRequest);
+router.get("/get/notification", protectRoute, getNotifications);
+router.get("/accept-request/:id", protectRoute, acceptFriendRequest);
 
 export default router;

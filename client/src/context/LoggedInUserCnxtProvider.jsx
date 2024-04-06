@@ -6,7 +6,8 @@ export const useLoggedInUser = () => {
 }
 
 const LoggedInUserCnxtProvider = ({children}) => {
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("login-user")) || null);
+
+    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("login-user")) || null);
     
     return (
         <LoggedInUserContext.Provider value={{user,setUser}}>

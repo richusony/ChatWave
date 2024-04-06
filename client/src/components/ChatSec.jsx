@@ -63,9 +63,17 @@ useEffect(()=>{
     setSendLoading(false);
     console.log("send :", resData);
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent default form submission
+      handleSendMessage();
+    }
+  };
+
   return (
     <>
-      <div className="w-full h-screen relative overflow-hidden bg-[#E8E8F9] dark:bg-[#424769]">
+      <div className="w-full h-screen relative overflow-hidden bg-[#E8E8F9] dark:bg-[#424769] ">
         {/* Header  */}
         <div className="py-2 px-4 bg-white dark:bg-[#2D3250] shadow-sm md:shadow-none right-0">
           <div className="flex justify-between items-center">
@@ -133,12 +141,14 @@ useEffect(()=>{
 
         {isOnline ? (
           <div className="px-2 py-2 w-full flex items-center justify-between cursor-text">
+            
             <input
               className="outline-none bg-white dark:bg-[#2D3250] dark:text-gray-300 w-screen py-3 px-3 rounded-full"
               type="text"
               value={input}
               placeholder="type something..."
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <span
               onClick={handleSendMessage}

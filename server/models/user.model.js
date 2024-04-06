@@ -17,6 +17,16 @@ const userSchema = new mongoose.Schema(
     profileImage: {
       type: String,
     },
+    friends: [
+      {
+        friendId: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "users",
+        },
+        status: { type: Boolean, required: true },
+      },
+    ],
     blocked: {
       type: Boolean,
       required: true,

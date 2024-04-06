@@ -13,10 +13,10 @@ export async function loginSignUp(email, fullname, profile_img, setUser) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: await JSON.stringify(reqData),
+    body: JSON.stringify(reqData),
   });
   const resData = await res.json();
-  localStorage.setItem("login-user", JSON.stringify(resData));
+  sessionStorage.setItem("login-user", JSON.stringify(resData));
   setUser(resData);
   // console.log("response from backend  ", resData);
 }

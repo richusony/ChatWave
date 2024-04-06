@@ -12,15 +12,17 @@ import { SocketContextProvider } from "../context/SocketContext.jsx";
 
 
 const Chats = () => {
-  const { userId } = useParams();
+  // const { userId } = useParams();
   const [selectedId, setSelectedId] = useState();
   const [openWindow,setOpenWindow] = useState(false);
+  const [notificationPage, setNotificationPage] = useState(false)
   const {user} = useLoggedInUser();
   console.log("context : ",user)
   console.log("selectedId : ",selectedId)
+
   return (
 <SocketContextProvider>
-    <SelectedChat.Provider value={{ openWindow, setOpenWindow, selectedId, setSelectedId }}>
+    <SelectedChat.Provider value={{ openWindow, setOpenWindow, notificationPage, setNotificationPage, selectedId, setSelectedId }}>
       {!user && <Navigate to="/" />}
       <div className="w-full h-full flex overflow-hidden">
         {openWindow && <FindUserPage />}
