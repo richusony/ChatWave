@@ -6,7 +6,7 @@ let complete = false;
     console.log("checking token",userId, " ::: ", token)
     res.cookie("jwt", token, {
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "lax",
     secure: process.env.NODE_ENV !== "development",
   });
   complete = true;
