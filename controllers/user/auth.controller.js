@@ -31,7 +31,7 @@ export const loginSignUp = async (req, res) => {
       }
     } else {
       generateTokenAndSetCookie(userDetails._id, res);
- 
+    
       res.status(200).json({
         _id: userDetails._id,
         fullname: userDetails.fullname,
