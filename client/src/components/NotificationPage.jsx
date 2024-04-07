@@ -37,7 +37,7 @@ const NotificationPage = () => {
             <span className="ml-4 mr-2 text-gray-500 text-base">{notify.notification.notificationType ==="follow-request"? "follows you" :"accepted your request"}</span>
           <div className='absolute right-3'>
            {notify.notification.notificationType ==="follow-request"? <button onClick={()=>handleAcceptRequest(notify.senderId._id)} className='px-4 py-1 bg-violet-500 rounded-md text-white shadow-xl'>accept</button> :""} 
-           <span className="ml-5"><FontAwesomeIcon className='hover:text-[#6c44fa] cursor-pointer' icon={faClose}/></span>
+           {/* <span className="ml-5"><FontAwesomeIcon className='hover:text-[#6c44fa] cursor-pointer' icon={faClose}/></span> */}
         </div>
                   </div>
                   )) : ""}

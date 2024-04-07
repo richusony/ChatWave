@@ -8,7 +8,7 @@ const FindUserPage = () => {
   const [searchInput, setSearchInput] = useState("");
   const {user} = useLoggedInUser();
   const [usersData, setUsersData] = useState([]);
-  const {setOpenWindow} = useContext(SelectedChat)
+  const {setOpenWindow, setSelectedId} = useContext(SelectedChat)
   useEffect(()=>{
     const searchUser =  async () => {
       if(searchInput == "") return setUsersData([]);
@@ -59,7 +59,7 @@ const handleFollowUser = async (userId) => {
         <div className='absolute right-3'>
           {user.friends?.some((usr) => usr.friendId === person._id) ? (
             user.friends.find((usr) => usr.friendId === person._id && usr.status) ? (
-              <button className='px-4 py-1 bg-violet-500 rounded-md text-white shadow-xl' onClick={() => handleFollowUser(person._id)}>message</button>
+              <button className='px-4 py-1 bg-violet-500 rounded-md text-white shadow-xl' onClick={() => setSelectedId(person._id)}>message</button>
             ) : (
               <button className='px-4 py-1 bg-violet-500 rounded-md text-white shadow-xl'>pending</button>
             )

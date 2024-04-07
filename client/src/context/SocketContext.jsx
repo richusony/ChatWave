@@ -16,7 +16,7 @@ export const SocketContextProvider = ({children}) =>{
     useEffect(()=> {
     if(user) {
         console.log("socket user: ",user)
-        const socket = io("http://localhost:8080", {
+        const socket = io(`${import.meta.env.VITE_BACKEND_DOMAIN}`, {
         query: {
             userId: user._id        
         }        

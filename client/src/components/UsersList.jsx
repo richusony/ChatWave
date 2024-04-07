@@ -15,10 +15,12 @@ import useScreen from "../Hooks/useScreen";
 import { ThemeProvdier } from "../context/theme";
 import SelectedChat from "../context/SelectedChat.jsx";
 import NotificationPage from "./NotificationPage.jsx";
+import { useMenuContext } from "../context/MenuContext.jsx";
 
 const UsersList = () => {
   const screenWidth = useScreen();
   const { setSelectedId, setOpenWindow, notificationPage, setNotificationPage} = useContext(SelectedChat);
+  const {setMenuBar} = useMenuContext()
   const [userData, setUserData] = useState([]);
   const [searchUser, setSearchUser] = useState("");
   const [filteredUser, setFilteredUser] = useState([]);
@@ -83,7 +85,7 @@ const UsersList = () => {
         <div className="mb-2 px-2 py-2">
           <div className="px-2 flex justify-between">
             <h2 className="text-xl">
-              <FontAwesomeIcon
+              <FontAwesomeIcon onClick={()=> setMenuBar(true)}
                 icon={faBars}
                 className="hover:text-[#6c44fa] dark:text-gray-800 dark:hover:text-[#6c44fa] cursor-pointer"
               />
@@ -98,7 +100,7 @@ const UsersList = () => {
               </h2>
               <h2 className="mr-7 text-xl">
                 <FontAwesomeIcon onClick={()=>{setNotificationPage((prev)=> !prev), setOpenWindow(false)}}
-                  className="transition delay-150 ease-linear text-gray-600 hover:text-[#6c44fa] dark:text-gray-800 dark:hover:text-[#6c44fa] cursor-pointer"
+                  className={`transition delay-75 ease-linear ${notificationPage?'text-[#6c44fa]':'text-gray-600'} hover:text-[#6c44fa] dark:text-gray-800 dark:hover:text-[#6c44fa] cursor-pointer`}
                   icon={faBell}
                 />
                 {notificationPage && <NotificationPage/> }

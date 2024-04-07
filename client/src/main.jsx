@@ -9,6 +9,7 @@ import ChatSec from "./components/ChatSec.jsx";
 import LoggedInUserCnxtProvider from "./context/LoggedInUserCnxtProvider.jsx";
 import { SocketContextProvider } from "./context/SocketContext.jsx";
 import FindUserPage from "./components/FindUserPage.jsx";
+import { MenuContextProvider } from "./context/MenuContext.jsx";
 // import UserContextProvider from "./context/UserContextProvider.jsx";
 // import { ThemeProvdier } from "./context/theme.js";
 
@@ -19,11 +20,11 @@ const chatRoute = createBrowserRouter([
   },
   {
     path: "/chats",
-    element: <LoggedInUserCnxtProvider><Chats /></LoggedInUserCnxtProvider>,
+    element: <MenuContextProvider><LoggedInUserCnxtProvider><Chats /></LoggedInUserCnxtProvider></MenuContextProvider>,
     children: [
       {
         path: ":userId", // Use ":userId" for dynamic user IDs
-        element: <LoggedInUserCnxtProvider><Chats /></LoggedInUserCnxtProvider>,
+        element: <MenuContextProvider><LoggedInUserCnxtProvider><Chats /></LoggedInUserCnxtProvider></MenuContextProvider>,
       },
     ],
   },
