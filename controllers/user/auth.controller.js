@@ -20,31 +20,39 @@ export const loginSignUp = async (req, res) => {
       });
       if (addUser) {
         const complete = generateTokenAndSetCookie(addUser._id, res);
-        if(complete) {
+        if (complete) {
           res.status(201).json({
-          _id: addUser._id,
-          fullname: addUser.fullname,
-          username: addUser.username,
-          profile_img: addUser.profileImage,
-        });
+            _id: addUser._id,
+            fullname: addUser.fullname,
+            username: addUser.username,
+            profile_img: addUser.profileImage,
+          });
         } else {
-          console.log("Token generation failed : generateTokenAndSetCookie()");
-          res.status(400).json({err: "Token generation failed : generateTokenAndSetCookie()"})
+          console.log("Token generation failed : generateTokenAndSetCookie() in user not exits case");
+          res.status(400).json({
+            err: "Token generation failed : generateTokenAndSetCookie() in user not exits case",
+          });
         }
-        
       } else {
         res.status(400).json({ err: "database issue" });
       }
     } else {
-      generateTokenAndSetCookie(userDetails._id, res);
+      const complete = generateTokenAndSetCookie(userDetails._id, res);
 
-      res.status(200).json({
-        _id: userDetails._id,
-        fullname: userDetails.fullname,
-        username: userDetails.username,
-        profile_img: userDetails.profileImage,
-        friends: userDetails.friends
-      });
+      if (complete) {
+        res.status(200).json({
+          _id: userDetails._id,
+          fullname: userDetails.fullname,
+          username: userDetails.username,
+          profile_img: userDetails.profileImage,
+          friends: userDetails.friends,
+        });
+      } else {
+        console.log("Token generation failed : generateTokenAndSetCookie() in user exits case");
+        res.status(400).json({
+          err: "Token generation failed : generateTokenAndSetCookie() in user exits case",
+        });
+      }
     }
   } catch (error) {
     console.log(`Error in logging in ${error}`);
@@ -54,10 +62,10 @@ export const loginSignUp = async (req, res) => {
 
 export const userLogOut = async (req, res) => {
   try {
-    res.cookie("jwt", "", { maxAge: 0});
-    res.status(200).json({message: "logged out successfully"})
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "logged out successfully" });
   } catch (error) {
-     console.log(`Error in logging out ${error}`);
+    console.log(`Error in logging out ${error}`);
     res.status(500).json({ err: `Internal Server Error` });
   }
-}
+};

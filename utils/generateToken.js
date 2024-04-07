@@ -10,6 +10,7 @@ let complete = false;
     secure: process.env.NODE_ENV !== "development",
   });
   complete = true;
+  console.log("compeleted : ",complete);
 return complete;
 };
 
