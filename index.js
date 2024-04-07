@@ -13,7 +13,11 @@ import { connectMongo } from "./connection.js";
 
 // const app = express();
 const PORT = process.env.PORT || 8080;
-app.use(cors())
+app.use(cors({
+  origin: 'https://richu-chatwave.vercel.app',
+  credentials: true
+}));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser())
