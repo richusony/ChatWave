@@ -19,19 +19,25 @@ export const loginSignUp = async (req, res) => {
         blocked: false,
       });
       if (addUser) {
-        generateTokenAndSetCookie(addUser._id, res);
-        res.status(201).json({
+        const complete = generateTokenAndSetCookie(addUser._id, res);
+        if(complete) {
+          res.status(201).json({
           _id: addUser._id,
           fullname: addUser.fullname,
           username: addUser.username,
           profile_img: addUser.profileImage,
         });
+        } else {
+          console.log("Token generation failed : generateTokenAndSetCookie()");
+          res.status(400).json({err: "Token generation failed : generateTokenAndSetCookie()"})
+        }
+        
       } else {
         res.status(400).json({ err: "database issue" });
       }
     } else {
       generateTokenAndSetCookie(userDetails._id, res);
-    
+
       res.status(200).json({
         _id: userDetails._id,
         fullname: userDetails.fullname,
