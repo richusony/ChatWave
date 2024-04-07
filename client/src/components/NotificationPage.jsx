@@ -9,14 +9,14 @@ const NotificationPage = () => {
       const res = await fetch(`/api/users/get/notification`);
       const data = await res.json();
       setNotification(data);
-      console.log(data);
+      // console.log(data);
     }
     fetchNotifications();
   },[])
 
   const handleAcceptRequest = async (userId) => {
     const res = await fetch(`/api/users/accept-request/${userId}`);
-    console.log(res);
+    // console.log(res);
   }
 
   return (

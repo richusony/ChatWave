@@ -23,7 +23,7 @@ const ChatSec = () => {
   const [user, setUser] = useState({});
   const [sendLoading, setSendLoading] = useState(false);
   const lastMessage = useRef();
-  console.log("online users ",onlineUsers)
+  // console.log("online users ",onlineUsers)
   const handleUserChats = async () => {
     const res = await fetch(`/api/messages/${selectedId}`);
     const data = await res.json();
@@ -36,7 +36,7 @@ const ChatSec = () => {
     const reqData = await fetch(`/api/users/${selectedId}`);
     const resData = await reqData.json();
     setUser(resData);
-    console.log("messages : ", resData);
+    // console.log("messages : ", resData);
   };
   useEffect(() => {
     getUserDetails();
@@ -61,7 +61,7 @@ useEffect(()=>{
     if(res.status == 201) setInput("");
     const resData = await res.json();
     setSendLoading(false);
-    console.log("send :", resData);
+    // console.log("send :", resData);
   };
 
   const handleKeyDown = (e) => {

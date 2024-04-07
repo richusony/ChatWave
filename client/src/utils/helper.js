@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function loginSignUp(email, fullname, profile_img, setUser) {
-  console.log("reached", email, fullname, profile_img);
+  // console.log("reached", email, fullname, profile_img);
   const reqData = {
     email,
     fullname,

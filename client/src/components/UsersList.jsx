@@ -35,7 +35,7 @@ const UsersList = () => {
       setFilteredUser(data);
     }
     getUsers();
-    console.log(userData);
+    // console.log(userData);
     } catch (error) {
       console.log("error while fetching users ",error)
     }

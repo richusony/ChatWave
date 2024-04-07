@@ -22,9 +22,9 @@ const Chats = () => {
   const { user } = useLoggedInUser();
   const { menuBar } = useMenuContext();
   const screenWidth = useScreen();
-  console.log("menu ", menuBar)
-  console.log("context : ", user)
-  console.log("selectedId : ", selectedId)
+  // console.log("menu ", menuBar)
+  // console.log("context : ", user)
+  // console.log("selectedId : ", selectedId)
 
   return (
 
