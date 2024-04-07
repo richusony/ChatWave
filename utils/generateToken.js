@@ -8,7 +8,7 @@ let complete = false;
     maxAge:60 * 60 * 1000,
     httpOnly: true,
     sameSite: "none",
-    secure: process.env.NODE_ENV !== "development",
+    secure: false,
   });
   complete = true;
   console.log("compeleted : ",complete);
