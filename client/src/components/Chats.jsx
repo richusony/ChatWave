@@ -11,6 +11,7 @@ import { useLoggedInUser } from "../context/LoggedInUserCnxtProvider.jsx";
 import { SocketContextProvider } from "../context/SocketContext.jsx";
 import { useMenuContext } from "../context/MenuContext.jsx";
 import MenuBar from "./MenuBar.jsx";
+import { AuthContextProvider } from "../context/AuthContext.jsx";
 
 
 const Chats = () => {
@@ -25,7 +26,7 @@ const Chats = () => {
   console.log("selectedId : ",selectedId)
 
   return (
-
+<AuthContextProvider>
 <SocketContextProvider>
     <SelectedChat.Provider value={{ openWindow, setOpenWindow, notificationPage, setNotificationPage, selectedId, setSelectedId }}>
       {!user && <Navigate to="/" />}
@@ -38,6 +39,7 @@ const Chats = () => {
       </div>
     </SelectedChat.Provider>
 </SocketContextProvider>
+</AuthContextProvider>
 
 
   );

@@ -45,3 +45,13 @@ export const loginSignUp = async (req, res) => {
     res.status(500).json({ err: `Internal Server Error` });
   }
 };
+
+export const userLogOut = async (req, res) => {
+  try {
+    res.cookie("jwt", "", { maxAge: 0});
+    res.status(200).json({message: "logged out successfully"})
+  } catch (error) {
+     console.log(`Error in logging out ${error}`);
+    res.status(500).json({ err: `Internal Server Error` });
+  }
+}
