@@ -39,6 +39,7 @@ export const getUsersForSidebar = async (req, res) => {
 
 export const getUserDetails = async (req, res) => {
   const { id } = req.params;
+  console.log("userId ::: ",id)
   try {
     const user = await userModel.findById(id);
     if (user) {
@@ -187,3 +188,12 @@ export const acceptFriendRequest = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const getUserFriendsList = async (req,res) => {
+  const currentUserId = req.user._id;
+  console.log(currentUserId);
+  const userDetails = await userModel.findById(currentUserId);
+  const friendsList = userDetails.friends;
+  console.log(friendsList);
+  res.status(200).json(friendsList);
+}
