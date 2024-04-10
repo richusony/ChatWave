@@ -30,8 +30,8 @@ export const sendMessage = async (req, res) => {
     await Promise.all([conversation.save(), newMessage.save()]);
 
     const receiverSocketId = getReceiverSocketId(receiverId);
-    if(receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage)
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
     res.status(201).json(newMessage);
@@ -47,7 +47,7 @@ export const getMessage = async (req, res) => {
 
     const conversation = await Conversation.findOne({
       participants: { $all: [senderId, userToChatId] },
-    }).populate("messages");
+    }).populate("messages").sort({createdAt: 1});
 
     if (!conversation) return res.status(200).json([]);
     const messages = conversation.messages;
@@ -55,4 +55,56 @@ export const getMessage = async (req, res) => {
   } catch (error) {
     res.status(500).json({ err: "Internal Server Error : getMessage" });
   }
+};
+
+export const getAllMessages = async (req, res) => {
+  const currentLoggedInUser = req.user._id;
+  const conversation = await Message.aggregate([
+  // Match messages for the specific receiverId
+  { $match: { receiverId: currentLoggedInUser } },
+
+  // Sort messages by createdAt in descending order
+  { $sort: { createdAt: -1 } },
+
+  // Group by senderId and take the first message for each sender
+  {
+    $group: {
+      _id: "$senderId",
+      latestMessage: { $first: "$$ROOT" } // $$ROOT includes the entire message document
+    }
+  },
+
+  // Project to reshape the output if needed
+  {
+    $project: {
+      _id: 0, // Exclude _id field from the output
+      senderId: "$latestMessage.senderId",
+      receiverId: "$latestMessage.receiverId",
+      message: "$latestMessage.message",
+      createdAt: "$latestMessage.createdAt"
+    }
+  },
+
+  // Optionally, populate senderId with user details
+  { $lookup: { from: "users", localField: "senderId", foreignField: "_id", as: "senderInfo" } },
+
+  // Optionally, unwind senderInfo array if needed
+  { $unwind: { path: "$senderInfo", preserveNullAndEmptyArrays: true } },
+
+  // Optionally, project to include sender's name or other details
+  {
+    $project: {
+      senderId: 1,
+      receiverId: 1,
+      message: 1,
+      createdAt: 1,
+      "senderInfo.fullname": 1,
+      "senderInfo.email": 1,
+      "senderInfo.profileImage": 1,
+      // Add more fields from senderInfo as needed
+    }
+  }
+]);
+
+  res.status(200).json(conversation);
 };

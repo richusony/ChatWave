@@ -28,7 +28,6 @@ export const getUsersForSidebar = async (req, res) => {
 
     const filteredUsers = [...uniqueUsersMap.values()];
 
-    console.log("filetered users :: ", filteredUsers);
     res.status(200).json(filteredUsers);
   } catch (error) {
     res
@@ -192,9 +191,7 @@ export const acceptFriendRequest = async (req, res) => {
 
 export const getUserFriendsList = async (req,res) => {
   const currentUserId = req.user._id;
-  console.log(currentUserId);
   const userDetails = await userModel.findById(currentUserId);
   const friendsList = userDetails.friends;
-  console.log(friendsList);
   res.status(200).json(friendsList);
 }
