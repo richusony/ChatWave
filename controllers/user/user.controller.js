@@ -172,6 +172,7 @@ export const acceptFriendRequest = async (req, res) => {
 
     const deleteUserNotification = await notificationModel.deleteOne({
       userId: currentUserId,
+      senderId: id
     });
     const sendRequestAcceptNotification = await notificationModel.create({
       userId: id,
