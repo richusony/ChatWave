@@ -2,6 +2,7 @@ import express from "express";
 import protectRoute from "../middleware/protectRoute.js";
 import {
   acceptFriendRequest,
+  blockUser,
   followUserRequest,
   getNotifications,
   getUserDetails,
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.get("/", protectRoute, getUsersForSidebar);
 router.get("/:id", protectRoute, getUserDetails);
+router.get("/block/:id", protectRoute, blockUser);
 router.post("/search-user", protectRoute, getUsers);
 router.get("/get/friends-list", protectRoute, getUserFriendsList);
 router.get("/follow-request/:id", protectRoute, followUserRequest);

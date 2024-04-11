@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
           ref: "users",
         },
         status: { type: Boolean, required: true },
+        blockByUser: { type: Boolean, required: true },
       },
     ],
     blocked: {

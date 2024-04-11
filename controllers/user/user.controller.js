@@ -195,3 +195,25 @@ export const getUserFriendsList = async (req,res) => {
   const friendsList = userDetails.friends;
   res.status(200).json(friendsList);
 }
+
+export const blockUser = async (req, res) => {
+  const currentUser = req.user._id;
+  const blockUserId = req.params.id;
+  console.log("blocking id :: ",blockUserId)
+
+  // Update the correct friend object in the user's friends array
+  const updatedUser = await userModel.findOneAndUpdate(
+    {
+      _id: currentUser,
+      "friends.friendId": blockUserId,
+    },
+    { $set: { "friends.$.blockByUser": true } },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    return res.status(404).json({ error: "User or friend not found." });
+  }
+
+  res.status(200).json(updatedUser);
+};
