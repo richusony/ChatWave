@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [`https://richu-chatwave.vercel.app`], // https://richu-chatwave.vercel.app
+    origin: [`https://localhost:5173`], // https://richu-chatwave.vercel.app
     methods: ["GET", "POST"],
   },
 });

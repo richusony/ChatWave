@@ -1,8 +1,10 @@
+process.env.UV_THREADPOOL_SIZE = os.cpus().length
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import os from "os"
 
 import userRouter from "./routes/user.router.js"
 import authRoutes from "./routes/auth.routes.js"
@@ -53,10 +55,11 @@ connectMongo(`${process.env.MONGODB_URI}`).then(() => {
 
 
 // User Routes
-
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes)
 app.use("/api/users", userRouter);
+
+console.log("CPU Length :: ",os.cpus().length)
 
 server.listen(PORT, () => {
   console.log(`Server running on Port: ${PORT}`);
