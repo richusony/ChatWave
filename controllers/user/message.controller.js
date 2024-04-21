@@ -1,8 +1,11 @@
 import Conversation from "../../models/conversation.model.js";
+import groupModel from "../../models/group.model.js";
+import groupMessagesModel from "../../models/groupMessages.model.js";
 import Message from "../../models/message.model.js";
 import userModel from "../../models/user.model.js";
 import { getReceiverSocketId, io } from "../../socket/socket.js";
 
+// Individual chat
 export const sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
@@ -10,7 +13,9 @@ export const sendMessage = async (req, res) => {
     const senderId = req.user._id;
 
     const receiverDetails = await userModel.findById(receiverId);
-    const friendsList = receiverDetails.friends.filter((friend) => friend.friendId.toString() == senderId);
+    const friendsList = receiverDetails.friends.filter(
+      (friend) => friend.friendId.toString() == senderId
+    );
     const isBlocked = friendsList[0].blockByUser;
     if (isBlocked)
       return res.status(403).json({
@@ -126,3 +131,73 @@ export const getAllMessages = async (req, res) => {
 
   res.status(200).json(conversation);
 };
+
+// Group chat
+export const createGroup = async (req, res) => {
+  try {
+    const currentUser = req.user._id;
+    const { groupName, members } = req.body;
+    console.log(req.body);
+
+    const groupMembers = await groupModel.create({
+      groupName: groupName,
+      groupAdmins: [currentUser],
+      participants: [currentUser, ...members],
+    });
+
+    if (groupMembers) {
+      res.status(201).json(groupMembers);
+    } else {
+      res.status(400).json({err: "Couldn't create group : createGroup"});
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({err: "Internal server error : createGroup"});
+  }
+};
+
+export const getGroupDetails = async (req, res) => {
+  const {groupId} = req.params;
+  try {
+    const groupData = await groupModel.findById(groupId).populate(["groupAdmins", "participants", "messages"]);
+    if (groupData) {
+      res.status(200).json(groupData)
+    } else {
+      res.status(404).json({err: "group not found : getGroupDetails"})
+    }
+  } catch (error) {
+    res.status(500).json({err: "Internal server error : getGroupDetails"})
+  }
+}
+
+export const sendMessageToGroup = async (req, res) => {
+try {
+    const { message } = req.body;
+    const { groupId } = req.params;
+    const senderId = req.user._id;
+
+    const groupDetails = await groupModel.findById(groupId);
+
+    const newMessage = new groupMessagesModel({
+      senderId,
+      groupId,
+      message,
+    });
+
+    if (newMessage) {
+      groupDetails.messages.push(newMessage._id);
+    }
+
+    await Promise.all([groupDetails.save(), newMessage.save()]);
+
+    // const receiverSocketId = getReceiverSocketId(receiverId);
+    // if (receiverSocketId) {
+    //   io.to(receiverSocketId).emit("newMessage", newMessage);
+    // }
+    io.to(groupDetails._id.toString()).emit("newMessageInGroup",newMessage)
+
+    res.status(201).json(newMessage);
+  } catch (error) {
+    res.status(500).json({ err: "Internal Server Error : sendMessageToGroup" });
+  }
+}

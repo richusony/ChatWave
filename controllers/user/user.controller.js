@@ -1,3 +1,4 @@
+import groupModel from "../../models/group.model.js";
 import notificationModel from "../../models/notification.model.js";
 import userModel from "../../models/user.model.js";
 
@@ -5,16 +6,17 @@ export const getUsersForSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
 
-    const userDetails = await userModel.findById(loggedInUserId)
+    const userDetails = await userModel
+      .findById(loggedInUserId)
       .populate({
-        path: 'friends.friendId', // Populate the 'friendId' field of 'friends' array
-        model: 'users', // Reference model to populate from
-        select: 'fullname username email profileImage', // Specify which fields to include
+        path: "friends.friendId", // Populate the 'friendId' field of 'friends' array
+        model: "users", // Reference model to populate from
+        select: "fullname username email profileImage", // Specify which fields to include
       })
       .exec();
 
     const uniqueUsersMap = new Map(); // Use a Map to track unique friendIds
-    userDetails.friends.forEach(friend => {
+    userDetails.friends.forEach((friend) => {
       const { friendId, status } = friend;
       uniqueUsersMap.set(friendId._id.toString(), {
         _id: friendId._id,
@@ -38,7 +40,7 @@ export const getUsersForSidebar = async (req, res) => {
 
 export const getUserDetails = async (req, res) => {
   const { id } = req.params;
-  console.log("userId ::: ",id)
+  console.log("userId ::: ", id);
   try {
     const user = await userModel.findById(id);
     if (user) {
@@ -171,7 +173,7 @@ export const acceptFriendRequest = async (req, res) => {
 
     const deleteUserNotification = await notificationModel.deleteOne({
       userId: currentUserId,
-      senderId: id
+      senderId: id,
     });
     const sendRequestAcceptNotification = await notificationModel.create({
       userId: id,
@@ -189,17 +191,26 @@ export const acceptFriendRequest = async (req, res) => {
   }
 };
 
-export const getUserFriendsList = async (req,res) => {
+export const getUserFriendsList = async (req, res) => {
   const currentUserId = req.user._id;
   const userDetails = await userModel.findById(currentUserId);
   const friendsList = userDetails.friends;
   res.status(200).json(friendsList);
-}
+};
+
+export const getUserFriendsListGroup = async (req, res) => {
+  const currentUserId = req.user._id;
+  const userDetails = await userModel
+    .findOne({ _id: currentUserId })
+    .populate("friends.friendId");
+  const friendsList = userDetails.friends;
+  res.status(200).json(friendsList);
+};
 
 export const blockUser = async (req, res) => {
   const currentUser = req.user._id;
   const blockUserId = req.params.id;
-  console.log("blocking id :: ",blockUserId)
+  console.log("blocking id :: ", blockUserId);
 
   // Update the correct friend object in the user's friends array
   const updatedUser = await userModel.findOneAndUpdate(
@@ -220,7 +231,6 @@ export const blockUser = async (req, res) => {
 export const unBlockUser = async (req, res) => {
   const currentUser = req.user._id;
   const unBlockUserId = req.params.id;
- 
 
   // Update the correct friend object in the user's friends array
   const updatedUser = await userModel.findOneAndUpdate(
@@ -238,3 +248,14 @@ export const unBlockUser = async (req, res) => {
 
   res.status(200).json(updatedUser);
 };
+
+export const getGroups = async (req, res) => {
+    const currentUserId = req.user._id;
+
+    try {
+        const groups = await groupModel.find({ participants: { $in: [currentUserId] } }).exec();
+        res.status(200).json(groups);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch groups." });
+    }
+}

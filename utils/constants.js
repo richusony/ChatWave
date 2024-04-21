@@ -1,0 +1,1 @@
+export const GROUP_PROFILE_IMG = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn2.vectorstock.com%2Fi%2F1000x1000%2F42%2F86%2Focean-wave-vector-1264286.jpg&f=1&nofb=1&ipt=9491f1738603a1eba7fc50993ca7fd6169fc7beb17842109f96dfc9cb6219695&ipo=images"

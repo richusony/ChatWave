@@ -1,3 +1,4 @@
+import {io} from "../../socket/socket.js"
 import userModel from "../../models/user.model.js";
 import generateTokenAndSetCookie from "../../utils/generateToken.js";
 

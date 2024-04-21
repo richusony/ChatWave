@@ -1,6 +1,8 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import { group } from "console";
+import { joinRooms } from "../utils/JoinRooms.js";
 
 const app = express();
 
@@ -15,6 +17,7 @@ const io = new Server(server, {
 export const getReceiverSocketId = (receiverId) => {
   return userSocketMap[receiverId];
 };
+
 
 const userSocketMap = {};
 
@@ -35,13 +38,14 @@ io.on("connection", (socket) => {
   }
 });
 
+joinRooms(socket, userId);
+
 socket.on("userStoppedTyping", (data) => {
   const receiverSocketId = getReceiverSocketId(data.receiverId);
   if (receiverSocketId) {
     io.to(receiverSocketId).emit("userStoppedTyping");
   }
 });
-
 
 
   socket.on("disconnect", () => {
