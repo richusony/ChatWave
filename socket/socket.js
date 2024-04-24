@@ -1,7 +1,6 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
-import { group } from "console";
 import { joinRooms } from "../utils/JoinRooms.js";
 
 const app = express();

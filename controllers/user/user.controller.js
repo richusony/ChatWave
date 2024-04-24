@@ -250,12 +250,40 @@ export const unBlockUser = async (req, res) => {
 };
 
 export const getGroups = async (req, res) => {
-    const currentUserId = req.user._id;
+  const currentUserId = req.user._id;
 
-    try {
-        const groups = await groupModel.find({ participants: { $in: [currentUserId] } }).exec();
-        res.status(200).json(groups);
-    } catch (error) {
-        res.status(500).json({ error: "Failed to fetch groups." });
+  try {
+    const groups = await groupModel
+      .find({ participants: { $in: [currentUserId] } })
+      .exec();
+    res.status(200).json(groups);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch groups." });
+  }
+};
+
+export const addFriendsToGroup = async (req, res) => {
+  const { groupId, members } = req.body;
+
+  try {
+    // Validate input data
+    if (!groupId || !members || !Array.isArray(members)) {
+      return res.status(400).json({ error: "Invalid request data" });
     }
-}
+
+    // Check if the group exists
+    const groupExist = await groupModel.findById(groupId);
+    if (!groupExist) {
+      return res.status(404).json({ error: "Group not found" });
+    }
+
+    // Update participants in the group
+    groupExist.participants = members;
+    const updatedGroup = await groupExist.save();
+
+    res.status(200).json(updatedGroup);
+  } catch (error) {
+    console.error("Error adding friends to group:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
