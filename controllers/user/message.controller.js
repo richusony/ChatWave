@@ -1,9 +1,10 @@
-import Conversation from "../../models/conversation.model.js";
-import groupModel from "../../models/group.model.js";
-import groupMessagesModel from "../../models/groupMessages.model.js";
-import Message from "../../models/message.model.js";
 import userModel from "../../models/user.model.js";
+import Message from "../../models/message.model.js";
+import groupModel from "../../models/group.model.js";
+import Conversation from "../../models/conversation.model.js";
 import { getReceiverSocketId, io } from "../../socket/socket.js";
+import groupMessagesModel from "../../models/groupMessages.model.js";
+import { decryptMessage, encryptMessage } from "../../utils/helper.js";
 
 // Individual chat
 export const sendMessage = async (req, res) => {
@@ -31,18 +32,27 @@ export const sendMessage = async (req, res) => {
         participants: [senderId, receiverId],
       });
     }
-    const newMessage = new Message({
+
+    // Encrypt the message before sending
+    const encryptionKey = Buffer.from(
+      process.env.MESSAGE_ENCRYPTION_KEY,
+      "base64"
+    );
+    const encryptedMessage = encryptMessage(message, encryptionKey);
+    // console.log("encrypted msg ::: ", encryptedMessage);
+    let newMessage = new Message({
       senderId,
       receiverId,
-      message,
+      message: encryptedMessage,
     });
+    // console.log("send msg :: ", newMessage);
 
     if (newMessage) {
       conversation.messages.push(newMessage._id);
     }
 
     await Promise.all([conversation.save(), newMessage.save()]);
-
+    newMessage.message = message;
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
@@ -66,7 +76,16 @@ export const getMessage = async (req, res) => {
       .sort({ createdAt: 1 });
 
     if (!conversation) return res.status(200).json([]);
-    const messages = conversation.messages;
+    // console.log("checkking ::: ", conversation.messages)
+    const messages = conversation.messages.map((msg) => {
+      // Decrypt each message and update the 'message' property in the 'msg' object
+      msg.message = decryptMessage(
+        msg?.message.encryptedMessage,
+        msg?.message.iv
+      );
+      return msg;
+    });
+    // console.log("get msg :: ", messages);
     res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ err: "Internal Server Error : getMessage" });
@@ -128,7 +147,14 @@ export const getAllMessages = async (req, res) => {
       },
     },
   ]);
-
+  const messages = conversation.map((msg) => {
+    // Decrypt each message and update the 'message' property in the 'msg' object
+    msg.message = decryptMessage(
+      msg?.message.encryptedMessage,
+      msg?.message.iv
+    );
+    return msg;
+  });
   res.status(200).json(conversation);
 };
 
@@ -148,40 +174,55 @@ export const createGroup = async (req, res) => {
     if (groupMembers) {
       res.status(201).json(groupMembers);
     } else {
-      res.status(400).json({err: "Couldn't create group : createGroup"});
+      res.status(400).json({ err: "Couldn't create group : createGroup" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({err: "Internal server error : createGroup"});
+    res.status(500).json({ err: "Internal server error : createGroup" });
   }
 };
 
 export const getGroupDetails = async (req, res) => {
-  const {groupId} = req.params;
+  const { groupId } = req.params;
   try {
-    const groupData = await groupModel.findById(groupId).populate(["groupAdmins", "participants", "messages"]);
+    const groupData = await groupModel
+      .findById(groupId)
+      .populate(["groupAdmins", "participants", "messages"]);
     if (groupData) {
-      res.status(200).json(groupData)
+      groupData.messages.map((msg) => {
+        // Decrypt each message and update the 'message' property in the 'msg' object
+        msg.message = decryptMessage(
+          msg?.message.encryptedMessage,
+          msg?.message.iv
+        );
+        return msg;
+      });
+      res.status(200).json(groupData);
     } else {
-      res.status(404).json({err: "group not found : getGroupDetails"})
+      res.status(404).json({ err: "group not found : getGroupDetails" });
     }
   } catch (error) {
-    res.status(500).json({err: "Internal server error : getGroupDetails"})
+    res.status(500).json({ err: "Internal server error : getGroupDetails" });
   }
-}
+};
 
 export const sendMessageToGroup = async (req, res) => {
-try {
+  try {
     const { message } = req.body;
     const { groupId } = req.params;
     const senderId = req.user._id;
 
     const groupDetails = await groupModel.findById(groupId);
-
+    // Encrypt the message before sending
+    const encryptionKey = Buffer.from(
+      process.env.MESSAGE_ENCRYPTION_KEY,
+      "base64"
+    );
+    const encryptedMessage = encryptMessage(message, encryptionKey);
     const newMessage = new groupMessagesModel({
       senderId,
       groupId,
-      message,
+      message: encryptedMessage,
     });
 
     if (newMessage) {
@@ -194,10 +235,11 @@ try {
     // if (receiverSocketId) {
     //   io.to(receiverSocketId).emit("newMessage", newMessage);
     // }
-    io.to(groupDetails._id.toString()).emit("newMessageInGroup",newMessage)
+    newMessage.message = message;
+    io.to(groupDetails._id.toString()).emit("newMessageInGroup", newMessage);
 
     res.status(201).json(newMessage);
   } catch (error) {
     res.status(500).json({ err: "Internal Server Error : sendMessageToGroup" });
   }
-}
+};
