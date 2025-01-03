@@ -49,9 +49,7 @@ app.use(express.json());
 app.use(cookieParser())
 
 // MongoDB Connection
-connectMongo(`${process.env.MONGODB_URI}`).then(() => {
-  console.log("Database Connected !!");
-});
+connectMongo(`${process.env.MONGODB_URI}`)
 
 
 // User Routes
