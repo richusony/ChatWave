@@ -287,3 +287,7 @@ export const addFriendsToGroup = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const serverReactivation = async (req, res) => { 
+  res.status(200).json({message: "ChatWave: server re-activated"});
+};
