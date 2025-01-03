@@ -13,10 +13,12 @@ import {
   getUsers,
   getUsersForSidebar,
   unBlockUser,
+  serverReactivation
 } from "../controllers/user/user.controller.js";
 
 const router = express.Router();
 
+router.get("/keep-alive", serverReactivation);
 router.get("/:id", protectRoute, getUserDetails);
 router.get("/block/:id", protectRoute, blockUser);
 router.get("/", protectRoute, getUsersForSidebar);
